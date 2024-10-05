@@ -1,0 +1,13 @@
+.image-container {
+	position: relative;
+}
+
+.between-image {
+	position: absolute;
+	top: -215px; /* Half of the container height to place it between sections */
+	left: 50%;
+	transform: translateX(-50%);
+	height: 350px; /* Adjust height of image */
+	width: auto; /* Maintain aspect ratio */
+	z-index: 10; /* Ensure it appears above both sections */
+}
