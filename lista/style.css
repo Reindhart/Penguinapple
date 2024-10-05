@@ -1,0 +1,65 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', Times, serif;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background: url("Pinstripe.png");
+    background-size: 3%;
+    padding: 10px;
+}
+
+.lista{
+    width: 100%;
+    max-width: 540px;
+    background: #fff;
+    margin: 100px auto 20px;
+    padding: 40px 30px 70px;
+}
+
+.lista h1 {
+    display: flex;
+    align-items: center;
+}
+
+.lista h1 img {
+    width: 30px;
+    margin: 8px auto 8px 180%;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+input {
+    flex: 0.95;
+    min-height: 29px;
+    padding-left: 5px;
+}
+
+ul li {
+    list-style: none;
+    font: 17px;
+    padding: 12px 8px 12px 50px;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+}
+
+ul li::before{
+    content: '';
+    position: absolute;
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    top: 12px;
+    left: 8px;
+}
