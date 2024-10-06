@@ -13,6 +13,13 @@
     padding: 10px;
 }
 
+.contenido{
+    white-space: normal;
+    overflow-wrap: break-word;
+    max-width: 100%;
+    word-break: break-word;
+}
+
 .lista{
     width: 100%;
     max-width: 540px;
@@ -66,6 +73,10 @@ li {
     display: flex;
     justify-content: space-between;
     margin: 10px 0;
+}
+
+ul li label {
+    margin-right: 10px;
 }
 
 .delete-btn {

@@ -1633,7 +1633,6 @@
 	.aesthetic-windows-95-modal-title-bar
 	.aesthetic-windows-95-modal-title-bar-text {
 	color: #fff;
-	white-space: nowrap; /* Evita que el texto se divida en varias líneas */
 }
 .aesthetic-windows-95-modal
 	.aesthetic-windows-95-modal-title-bar

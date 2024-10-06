@@ -82,11 +82,12 @@ taskInput.addEventListener('keypress', function(event) {
 // Función para guardar las tareas en local storage
 function saveTasks() {
     const tasks = [];
-    document.querySelectorAll('#task-list li').forEach(task => {
+    document.querySelectorAll('#taskList li').forEach(task => {
         const text = task.querySelector('label').textContent.trim();
         const completed = task.querySelector('input[type="checkbox"]').checked;
         tasks.push({ text, completed });
     });
+    console.log("Guardando tareas: ", tasks); // Depuración
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
@@ -105,14 +106,21 @@ function loadTasks() {
         newTask.appendChild(label);
 
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Eliminar';
-        deleteButton.classList.add('delete-btn');
+        deleteButton.classList.add('aesthetic-windows-95-button-title-bar', 'delete-btn');
+        deleteButton.innerHTML = '<img src="msg_error-0.png" alt="eliminar">';
         deleteButton.addEventListener('click', deleteTask);
         newTask.appendChild(deleteButton);
 
+        // Añadir la tarea al <ul> o lista de tareas
         taskList.appendChild(newTask);
 
-        // Añadir evento al checkbox
+        // Añadir el <hr> si no es el último elemento
+        if (task !== tasks[tasks.length - 1]) {
+            const hr = document.createElement('hr');
+            taskList.appendChild(hr);
+        }
+
+        // Añadir evento al checkbox para marcar como completado
         const checkbox = label.querySelector('input[type="checkbox"]');
         checkbox.addEventListener('change', toggleTask);
     });
