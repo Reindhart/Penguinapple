@@ -1,13 +1,16 @@
-// Obtener elementos del DOM
+// Variables del documento
+
 const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
 
-// Función para agregar una nueva tarea
+/* Añadir tarea
+    Primero
+*/
 function addTask() {
     const taskText = taskInput.value.trim();
     if (taskText === "") {
-        alert("Please enter a task!");
+        alert("Porfavor escriba una tarea.");
         return;
     }
 
