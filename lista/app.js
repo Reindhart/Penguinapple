@@ -4,9 +4,7 @@ const taskInput = document.getElementById('taskInput');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
 
-/* Añadir tarea
-    Primero
-*/
+// Añadir tarea
 function addTask() {
     const taskText = taskInput.value.trim();
     if (taskText === "") {
@@ -14,7 +12,8 @@ function addTask() {
         return;
     }
 
-    // Solo agregar <hr> si no es el primer elemento
+    // Solo agregar <hr> si no es el primer elemento, además lo agrega arriba del <li> para que
+    // ni el primer ni último <li> tengan <hr>, solo los que se encuentren en medio
     if (taskList.children.length > 0) {
         const hr = document.createElement('hr');
         taskList.appendChild(hr);
@@ -22,7 +21,15 @@ function addTask() {
 
     const newTask = document.createElement('li');
 
-    // Crear label con checkbox
+    // Agregar checkbox a la etiqueta label
+    /*
+        La razón de esto es debido a que adapte un framwork de CSS que me gusta
+        a este proyecto, entonces quisé utilizar el checkbox que tiene y se realiza
+        con la estructura que se encentra en el index. Por esta misma razón es que
+        tiene una estructura extraña el JS, para guardar las estructuras del framework
+        y sus clases respectivas
+    */
+
     const label = document.createElement('label');
     label.classList.add('aesthetic-windows-95-checkbox');
     label.innerHTML = `${taskText}
@@ -31,7 +38,7 @@ function addTask() {
 
     newTask.appendChild(label);
 
-    // Crear botón para eliminar tarea con formato específico
+    // Crear botón para eliminar tarea
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('aesthetic-windows-95-button-title-bar', 'delete-btn');
     deleteButton.innerHTML = '<img src="msg_error-0.png" alt="eliminar">';
@@ -39,38 +46,40 @@ function addTask() {
     newTask.appendChild(deleteButton);
 
     // Añadir la tarea a la lista
-    taskList.appendChild(newTask);
-
-    
+    taskList.appendChild(newTask);    
 
     // Añadir evento al checkbox
     const checkbox = label.querySelector('input[type="checkbox"]');
     checkbox.addEventListener('change', toggleTask);
 
-    saveTasks(); // Guardar tareas en local storage
+    // Guardar y reiniciar el cuadro de texto
+    saveTasks();
     taskInput.value = "";
 }
 
-// Función para marcar como completado
+// Función para marcar como completado. Le agrega o quita la clase "completed" al <li>.
+// Debido a que el checkbox se encuentra dentro del mismo, este siempre sera el más cercano.
 function toggleTask(event) {
     const taskItem = event.target.closest('li');
     taskItem.classList.toggle('completed', event.target.checked);
-    saveTasks(); // Actualizar local storage
+    saveTasks();
 }
+
 // Añadir evento al botón para agregar la tarea
 addTaskBtn.addEventListener('click', addTask);
 
 // Función para borrar elemento
 function deleteTask(event) {
-    const taskItem = event.target.closest('li'); // Obtener el elemento 'li' más cercano
-    const hr = taskItem.previousElementSibling; // Obtener el siguiente elemento, que debería ser el <hr>
-    
-    taskItem.remove(); // Eliminar el <li>
-    if (hr && hr.tagName === 'HR') { // Verificar si el siguiente elemento es un <hr>
-        hr.remove(); // Eliminar el <hr>
-    }
 
-    saveTasks(); // Actualizar local storage
+    const taskItem = event.target.closest('li');
+    const hr = taskItem.previousElementSibling;
+    
+   // Elimina el <li> y el <hr> que tenga previo al <li>.
+    taskItem.remove();
+    if (hr && hr.tagName === 'HR') {
+        hr.remove();
+    }
+    saveTasks();
 }
 
 // Añadir la tarea al presionar 'Enter'
@@ -79,8 +88,6 @@ taskInput.addEventListener('keypress', function(event) {
         addTask();
     }
 });
-
-
 
 // Función para guardar las tareas en local storage
 function saveTasks() {
@@ -100,6 +107,11 @@ function loadTasks() {
     tasks.forEach(task => {
         const newTask = document.createElement('li');
 
+        // Si la tarea está completada, añade la clase "completed"
+        if (task.completed) {
+            newTask.classList.add('completed');
+        }
+
         const label = document.createElement('label');
         label.classList.add('aesthetic-windows-95-checkbox');
         label.innerHTML = `${task.text}
@@ -114,7 +126,7 @@ function loadTasks() {
         deleteButton.addEventListener('click', deleteTask);
         newTask.appendChild(deleteButton);
 
-        // Añadir la tarea al <ul> o lista de tareas
+        // Añadir la tarea al <ul>
         taskList.appendChild(newTask);
 
         // Añadir el <hr> si no es el último elemento
