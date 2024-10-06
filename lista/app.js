@@ -9,8 +9,8 @@ const taskList = document.getElementById('taskList');
     La razón de esta estructura es debido a que adapte un framwork de CSS que me gusta
     a este proyecto, entonces quisé utilizar el checkbox que tiene y usa la
     la estructura en el index. Por esta misma razón es que se generan los elementos de
-    unaforma extraña en ek JS. Además por seguridad se esta escapenado todo input y se evita
-    crear las etiquetas con texto plano.
+    una forma extraña en el JS. Además por seguridad se esta escapenado todo input y se evita
+    crear las etiquetas con texto plano, excepto en la imagen debido a que no representa una amenaza.
 */
 function addTaskElement(task) {
     const newTask = document.createElement('li');
