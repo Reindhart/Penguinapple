@@ -5,54 +5,72 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const taskList = document.getElementById('taskList');
 
 // Añadir tarea
+/*
+    La razón de esta estructura es debido a que adapte un framwork de CSS que me gusta
+    a este proyecto, entonces quisé utilizar el checkbox que tiene y usa la
+    la estructura en el index. Por esta misma razón es que se generan los elementos de
+    unaforma extraña en ek JS. Además por seguridad se esta escapenado todo input y se evita
+    crear las etiquetas con texto plano.
+*/
+function addTaskElement(task) {
+    const newTask = document.createElement('li');
+
+    // Crear el label
+    const label = document.createElement('label');
+    label.classList.add('aesthetic-windows-95-checkbox');
+
+    // Crear el checkbox
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+
+    // Crear el span de texto (escapando el texto del usuario)
+    const taskText = document.createElement('span');
+    taskText.textContent = task.text;
+
+    // Crear el span de estilo
+    const checkmark = document.createElement('span');
+    checkmark.classList.add('aesthetic-windows-95-checkmark');
+
+    // Añadir los elementos al label
+    label.appendChild(taskText);
+    label.appendChild(checkbox);
+    label.appendChild(checkmark);
+
+    // Añadir el label a la tarea (li)
+    newTask.appendChild(label);
+
+    // Crear botón de eliminar
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('aesthetic-windows-95-button-title-bar', 'delete-btn');
+    deleteButton.innerHTML = '<img src="msg_error-0.png" alt="eliminar">';
+    deleteButton.addEventListener('click', deleteTask);
+
+    // Añadir el botón de eliminar
+    newTask.appendChild(deleteButton);
+
+    return newTask;
+}
+
 function addTask() {
     const taskText = taskInput.value.trim();
     if (taskText === "") {
-        alert("Porfavor escriba una tarea.");
+        alert("Porfavor escriba una tarea primero.");
         return;
     }
-
-    // Solo agregar <hr> si no es el primer elemento, además lo agrega arriba del <li> para que
-    // ni el primer ni último <li> tengan <hr>, solo los que se encuentren en medio
+  
+    const task = { text: taskText, completed: false };
+    
+    // Añadir <hr> si no es el último elemento
     if (taskList.children.length > 0) {
         const hr = document.createElement('hr');
         taskList.appendChild(hr);
     }
 
-    const newTask = document.createElement('li');
+    const taskElement = addTaskElement(task);
+    taskList.appendChild(taskElement);
 
-    // Agregar checkbox a la etiqueta label
-    /*
-        La razón de esto es debido a que adapte un framwork de CSS que me gusta
-        a este proyecto, entonces quisé utilizar el checkbox que tiene y se realiza
-        con la estructura que se encentra en el index. Por esta misma razón es que
-        tiene una estructura extraña el JS, para guardar las estructuras del framework
-        y sus clases respectivas
-    */
-
-    const label = document.createElement('label');
-    label.classList.add('aesthetic-windows-95-checkbox');
-    label.innerHTML = `${taskText}
-        <input type="checkbox" />
-        <span class="aesthetic-windows-95-checkmark"></span>`;
-
-    newTask.appendChild(label);
-
-    // Crear botón para eliminar tarea
-    const deleteButton = document.createElement('button');
-    deleteButton.classList.add('aesthetic-windows-95-button-title-bar', 'delete-btn');
-    deleteButton.innerHTML = '<img src="msg_error-0.png" alt="eliminar">';
-    deleteButton.addEventListener('click', deleteTask);
-    newTask.appendChild(deleteButton);
-
-    // Añadir la tarea a la lista
-    taskList.appendChild(newTask);    
-
-    // Añadir evento al checkbox
-    const checkbox = label.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', toggleTask);
-
-    // Guardar y reiniciar el cuadro de texto
+    // Guardar y limpiar el input de texto
     saveTasks();
     taskInput.value = "";
 }
@@ -101,42 +119,32 @@ function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// Función para cargar tareas desde local storage
+function escapeHTML(text) {
+    const element = document.createElement('div');
+    element.innerText = text;
+    return element.innerHTML;
+}
+
 function loadTasks() {
     const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     tasks.forEach(task => {
-        const newTask = document.createElement('li');
+        const taskElement = addTaskElement({ 
+            text: escapeHTML(task.text),  // Escapar el texto de la tarea
+            completed: task.completed 
+        });
 
-        // Si la tarea está completada, añade la clase "completed"
         if (task.completed) {
-            newTask.classList.add('completed');
+            taskElement.classList.add('completed');
         }
+        taskList.appendChild(taskElement);
 
-        const label = document.createElement('label');
-        label.classList.add('aesthetic-windows-95-checkbox');
-        label.innerHTML = `${task.text}
-            <input type="checkbox" ${task.completed ? 'checked' : ''} />
-            <span class="aesthetic-windows-95-checkmark"></span>`;
-
-        newTask.appendChild(label);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.classList.add('aesthetic-windows-95-button-title-bar', 'delete-btn');
-        deleteButton.innerHTML = '<img src="msg_error-0.png" alt="eliminar">';
-        deleteButton.addEventListener('click', deleteTask);
-        newTask.appendChild(deleteButton);
-
-        // Añadir la tarea al <ul>
-        taskList.appendChild(newTask);
-
-        // Añadir el <hr> si no es el último elemento
+        // Añadir <hr> si no es el último elemento
         if (task !== tasks[tasks.length - 1]) {
             const hr = document.createElement('hr');
             taskList.appendChild(hr);
         }
 
-        // Añadir evento al checkbox para marcar como completado
-        const checkbox = label.querySelector('input[type="checkbox"]');
+        const checkbox = taskElement.querySelector('input[type="checkbox"]');
         checkbox.addEventListener('change', toggleTask);
     });
 }
